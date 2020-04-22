@@ -18,8 +18,8 @@ class Category(models.Model):
 class Discussion(models.Model):
     name = models.CharField(max_length=300, default='name')
     description = models.TextField(default='')
-    topics_count = models.FloatField(default=0)
-    posts_count = models.FloatField(default=0)
+    topics_count = models.IntegerField(default=0)
+    posts_count = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='discussions')
 
@@ -39,14 +39,14 @@ class Discussion(models.Model):
 
 
 class Topic(models.Model):
-    unread = models.FloatField(default=4)
+    unread = models.IntegerField(default=4)
     title = models.CharField(max_length=300, default='title')
     description = models.TextField(default='')
-    author = models.TextField(default='author')
+    author = models.CharField(max_length=300, default='author')
     date = models.DateField(default='February 4, 2016 10:13:00')
-    replies = models.FloatField(default=4)
-    views = models.FloatField(default=201)
-    last_author = models.TextField(default='last author')
+    replies = models.IntegerField(default=4)
+    views = models.IntegerField(default=201)
+    last_author = models.CharField(max_length=300, default='last author')
     last_date = models.DateField(default='April 17, 2020 11:17:00')
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE,
                                    related_name='topics')
@@ -72,8 +72,8 @@ class Topic(models.Model):
 
 
 class Comment(models.Model):
-    content = models.TextField(default='')
-    author = models.TextField(default='author')
+    content = models.CharField(max_length=300, default='content')
+    author = models.CharField(max_length=300, default='author')
     date = models.DateField(default='May 2, 2016 10:13:00')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE,
                               related_name='comments')
