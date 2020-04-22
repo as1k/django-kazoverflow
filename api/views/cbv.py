@@ -32,6 +32,7 @@ class DiscussionDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class CategoryDiscussions(APIView):
     def get(self, request, category_id):
+        # category = Category.objects.get(id=category_id)
         discussions = Discussion.objects.filter(category_id=category_id)
         serializer = DiscussionSerializer(discussions, many=True)
         return Response(serializer.data)
@@ -58,7 +59,8 @@ class TopicDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class DiscussionTopics(APIView):
     def get(self, request, category_id, discussion_id):
-        discussion = Discussion.objects.get(id=category_id)
+        # category = Category.objects.get(id=category_id)
+        # discussion = Discussion.objects.get(id=discussion_id)
         topics = Topic.objects.filter(discussion_id=discussion_id)
         serializer = TopicSerializer(topics, many=True)
         return Response(serializer.data)
@@ -85,8 +87,9 @@ class CommentDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class TopicComments(APIView):
     def get(self, request, category_id, discussion_id, topic_id):
-        discussion = Discussion.objects.get(id=category_id)
-        topic = Topic.objects.filter(id=discussion_id)
+        # category = Category.objects.get(id=category_id)
+        # discussion = Discussion.objects.get(id=discussion_id)
+        # topic = Topic.objects.filter(id=topic_id)
         comments = Comment.objects.filter(topic_id=topic_id)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)

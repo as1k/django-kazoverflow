@@ -48,30 +48,6 @@ def category_detail(request, category_id):
         return Response({'deleted': True})
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-# @permission_classes([IsAuthenticated])
-def category_discussions(request, category_id):
-    try:
-        discussions = Discussion.objects.filter(category_id=category_id)
-    except Discussion.DoesNotExist as e:
-        return Response({'error': str(e)})
-
-    if request.method == 'GET':
-        serializer = DiscussionSerializer(discussions, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = DiscussionSerializer(instance=discussions, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response({'error': serializer.errors})
-
-    elif request.method == 'DELETE':
-        discussions.delete()
-        return Response({'deleted': True})
-
-
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
 def discussion_list(request):
@@ -110,4 +86,164 @@ def discussion_detail(request, discussion_id):
 
     elif request.method == 'DELETE':
         discussion.delete()
+        return Response({'deleted': True})
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+def category_discussions(request, category_id):
+    try:
+        # category = Category.objects.get(id=category_id)
+        discussions = Discussion.objects.filter(category_id=category_id)
+    except (Category.DoesNotExist or Discussion.DoesNotExist) as e:
+        return Response({'error': str(e)})
+
+    if request.method == 'GET':
+        serializer = DiscussionSerializer(discussions, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = DiscussionSerializer(instance=discussions, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error': serializer.errors})
+
+    elif request.method == 'DELETE':
+        discussions.delete()
+        return Response({'deleted': True})
+
+
+@api_view(['GET', 'POST'])
+# @permission_classes([IsAuthenticated])
+def topic_list(request):
+    if request.method == 'GET':
+        topics = Topic.objects.all()
+        serializer = TopicSerializer(topics, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = TopicSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'error': serializer.errors},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+def topic_detail(request, topic_id):
+    try:
+        topic = Topic.objects.get(id=topic_id)
+    except Topic.DoesNotExist as e:
+        return Response({'error': str(e)})
+
+    if request.method == 'GET':
+        serializer = TopicSerializer(topic)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = TopicSerializer(instance=topic, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error': serializer.errors})
+
+    elif request.method == 'DELETE':
+        topic.delete()
+        return Response({'deleted': True})
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+def discussion_topics(request, category_id, discussion_id):
+    try:
+        # category = Category.objects.get(id=category_id)
+        # discussion = Discussion.objects.get(id=discussion_id)
+        topics = Topic.objects.filter(discussion_id=discussion_id)
+    except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist) as e:
+        return Response({'error': str(e)})
+
+    if request.method == 'GET':
+        serializer = TopicSerializer(topics, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = TopicSerializer(instance=topics, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error': serializer.errors})
+
+    elif request.method == 'DELETE':
+        topics.delete()
+        return Response({'deleted': True})
+
+
+@api_view(['GET', 'POST'])
+# @permission_classes([IsAuthenticated])
+def comment_list(request):
+    if request.method == 'GET':
+        comments = Comment.objects.all()
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'error': serializer.errors},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+def comment_detail(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist as e:
+        return Response({'error': str(e)})
+
+    if request.method == 'GET':
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CommentSerializer(instance=comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error': serializer.errors})
+
+    elif request.method == 'DELETE':
+        comment.delete()
+        return Response({'deleted': True})
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated])
+def topic_comments(request, category_id, discussion_id, topic_id):
+    try:
+        # category = Category.objects.get(id=category_id)
+        # discussion = Discussion.objects.get(id=discussion_id)
+        # topic = Topic.objects.get(id=topic_id)
+        comments = Comment.objects.filter(topic_id=topic_id)
+    except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist or Comment.DoesNotExist) as e:
+        return Response({'error': str(e)})
+
+    if request.method == 'GET':
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CommentSerializer(instance=comments, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'error': serializer.errors})
+
+    elif request.method == 'DELETE':
+        comments.delete()
         return Response({'deleted': True})
