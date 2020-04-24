@@ -34,7 +34,7 @@ class CategoryWithDiscussionsSerializer(serializers.ModelSerializer):
 
 
 class TopicSerializer(serializers.ModelSerializer):
-    discussion_id = serializers.IntegerField(write_only=True)
+    discussion_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Topic

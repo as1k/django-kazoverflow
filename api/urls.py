@@ -15,7 +15,7 @@ urlpatterns = [
     path('categories/<int:category_id>/discussions/', category_discussions),
     path('topics/', topic_list),
     path('topics/<int:topic_id>/', topic_detail),
-    path('categories/<int:category_id>/discussions/<int:discussion_id>/topics/', discussion_topics),
+    path('discussions/<int:discussion_id>/topics/', discussion_topics),
     path('comments/', comment_list),
     path('comments/<int:comment_id>/', comment_detail),
     path('categories/<int:category_id>/discussions/<int:discussion_id>/topics/<int:topic_id>/comments/', topic_comments)

@@ -4,7 +4,10 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.models import Category, Discussion, Topic, Comment
-from api.serializers import CategorySerializer, DiscussionSerializer, TopicSerializer, CommentSerializer
+from api.serializers import CategorySerializer, \
+    DiscussionSerializer, TopicSerializer,\
+    CommentSerializer, CategoryWithDiscussionsSerializer, \
+    DiscussionWithTopicsSerializer, TopicWithCommentsSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -12,7 +15,7 @@ from api.serializers import CategorySerializer, DiscussionSerializer, TopicSeria
 def category_list(request):
     if request.method == 'GET':
         categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
+        serializer = CategoryWithDiscussionsSerializer(categories, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
@@ -33,7 +36,7 @@ def category_detail(request, category_id):
         return Response({'error': str(e)})
 
     if request.method == 'GET':
-        serializer = CategorySerializer(category)
+        serializer = CategoryWithDiscussionsSerializer(category)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -140,7 +143,7 @@ def topic_detail(request, topic_id):
         return Response({'error': str(e)})
 
     if request.method == 'GET':
-        serializer = TopicSerializer(topic)
+        serializer = TopicWithCommentsSerializer(topic)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -157,16 +160,16 @@ def topic_detail(request, topic_id):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 # @permission_classes([IsAuthenticated])
-def discussion_topics(request, category_id, discussion_id):
+def discussion_topics(request, discussion_id):
     try:
         # category = Category.objects.get(id=category_id)
-        # discussion = Discussion.objects.get(id=discussion_id)
+        discussion = Discussion.objects.get(id = discussion_id)
         topics = Topic.objects.filter(discussion_id=discussion_id)
     except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist) as e:
         return Response({'error': str(e)})
 
     if request.method == 'GET':
-        serializer = TopicSerializer(topics, many=True)
+        serializer = DiscussionWithTopicsSerializer(discussion)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
