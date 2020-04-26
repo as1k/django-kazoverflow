@@ -67,7 +67,6 @@ class Topic(models.Model):
 
     objects = models.Manager()  # The default manager.
     sorted_objects = SortManager()
-    python_objects = PythonDevManager()  # The-PythonDev-specific manager.
 
     class Meta:
         verbose_name = 'Topic'

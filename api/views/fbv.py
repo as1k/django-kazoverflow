@@ -176,9 +176,9 @@ def topic_detail(request, topic_id):
 def discussion_topics(request, discussion_id):
     try:
         discussion = Discussion.objects.get(id=discussion_id)
-        # topics = Topic.objects.filter(discussion_id=discussion_id)
-        topics = Topic.sorted_objects.sort_by_title(request)\
-            .sort_by_id(request).filter(discussion_id=discussion_id) # sort by title -> id
+        # topics = Topic.objects.filter(discussion_id=discussion_id) # default
+        topics = Topic.sorted_objects.sort_by_title(request).filter(discussion_id=discussion_id) # sort by title
+        # topics = Topic.sorted_objects.sort_by_id(request).filter(discussion_id=discussion_id) # sort by id
     except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist) as e:
         return Response({'error': str(e)})
 

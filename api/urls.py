@@ -6,23 +6,40 @@ from api.views.fbv import category_list, category_detail, discussion_list, discu
 from api.views.cbv import CategoryList, CategoryDetails, DiscussionList, DiscussionDetails, CategoryDiscussions, \
     TopicList, TopicDetails, DiscussionTopics, CommentList, CommentDetails, TopicComments
 
+
 urlpatterns = [
     path('login/', obtain_jwt_token),
     path('categories/', category_list),
     path('categories/<int:category_id>/', category_detail),
-    path('discussions/', discussion_list),
+    path('discussions/', DiscussionList.as_view()),
     path('discussions/<int:discussion_id>', discussion_detail),
     path('categories/<int:category_id>/discussions/', category_discussions),
     path('topics/', topic_list),
     path('topics/<int:topic_id>/', topic_detail),
     path('discussions/<int:discussion_id>/topics/', discussion_topics),
     path('comments/', comment_list),
-    path('comments/<int:comment_id>/', comment_detail),
+    path('comments/<int:pk>/', CommentDetails.as_view()),
     path('categories/<int:category_id>/discussions/<int:discussion_id>/topics/<int:topic_id>/comments/', topic_comments),
     path('signup/', create_user)
 ]
 
-
+# urlpatterns = [
+#     path('login/', obtain_jwt_token),
+#     path('categories/', category_list),
+#     path('categories/<int:category_id>/', category_detail),
+#     path('discussions/', discussion_list),
+#     path('discussions/<int:discussion_id>', discussion_detail),
+#     path('categories/<int:category_id>/discussions/', category_discussions),
+#     path('topics/', topic_list),
+#     path('topics/<int:topic_id>/', topic_detail),
+#     path('discussions/<int:discussion_id>/topics/', discussion_topics),
+#     path('comments/', comment_list),
+#     path('comments/<int:comment_id>/', comment_detail),
+#     path('categories/<int:category_id>/discussions/<int:discussion_id>/topics/<int:topic_id>/comments/', topic_comments),
+#     path('signup/', create_user)
+# ]
+#
+#
 # urlpatterns = [
 #     path('login/', obtain_jwt_token),
 #     path('categories/', CategoryList.as_view()),
