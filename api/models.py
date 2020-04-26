@@ -1,6 +1,19 @@
 from django.db import models
 
 
+class PythonDevManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(discussion_id=1)
+
+
+class SortManager(models.Manager):
+    def sort_by_title(self, title):
+        return self.order_by('title')
+
+    def sort_by_id(self, id):
+        return self.order_by('-id')
+
+
 class Category(models.Model):
     name = models.CharField(max_length=300, default='name')
 
@@ -50,6 +63,10 @@ class Topic(models.Model):
     last_date = models.DateField(default='April 17, 2020 11:17:00')
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE,
                                    related_name='topics')
+
+    objects = models.Manager()  # The default manager.
+    sorted_objects = SortManager()
+    python_objects = PythonDevManager()  # The-PythonDev-specific manager.
 
     class Meta:
         verbose_name = 'Topic'

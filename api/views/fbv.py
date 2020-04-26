@@ -166,9 +166,10 @@ def topic_detail(request, topic_id):
 # @permission_classes([IsAuthenticated])
 def discussion_topics(request, discussion_id):
     try:
-        # category = Category.objects.get(id=category_id)
         discussion = Discussion.objects.get(id=discussion_id)
-        topics = Topic.objects.filter(discussion_id=discussion_id)
+        # topics = Topic.objects.filter(discussion_id=discussion_id)
+        # topics = Topic.sorted_objects.sort_by_title(request).filter(discussion_id=discussion_id) # sort by title
+        topics = Topic.sorted_objects.sort_by_id(request).filter(discussion_id=discussion_id) # sort by id
     except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist) as e:
         return Response({'error': str(e)})
 
