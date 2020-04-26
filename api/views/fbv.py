@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.models import Category, Discussion, Topic, Comment
@@ -121,8 +122,11 @@ def category_discussions(request, category_id):
 # @permission_classes([IsAuthenticated])
 def topic_list(request):
     if request.method == 'GET':
+        paginator = PageNumberPagination()
+        paginator.page_size = 4
         topics = Topic.objects.all()
-        serializer = TopicSerializer(topics, many=True)
+        result_page = paginator.paginate_queryset(topics, request)
+        serializer = TopicSerializer(result_page, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
@@ -163,13 +167,16 @@ def topic_detail(request, topic_id):
 def discussion_topics(request, discussion_id):
     try:
         # category = Category.objects.get(id=category_id)
-        discussion = Discussion.objects.get(id = discussion_id)
+        discussion = Discussion.objects.get(id=discussion_id)
         topics = Topic.objects.filter(discussion_id=discussion_id)
     except (Category.DoesNotExist or Discussion.DoesNotExist or Topic.DoesNotExist) as e:
         return Response({'error': str(e)})
 
     if request.method == 'GET':
-        serializer = DiscussionWithTopicsSerializer(discussion)
+        paginator = PageNumberPagination()
+        paginator.page_size = 3
+        result_page = paginator.paginate_queryset(topics, request)
+        serializer = TopicSerializer(result_page, many=True)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
