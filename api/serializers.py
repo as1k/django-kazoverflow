@@ -42,6 +42,14 @@ class TopicSerializer(serializers.ModelSerializer):
                   'views', 'last_author', 'last_date', 'discussion_id')
 
 
+class CommentMSerializer(serializers.ModelSerializer):
+    topic_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'content', 'author', 'date', 'topic_id')
+
+
 class DiscussionWithTopicsSerializer(serializers.ModelSerializer):
     topics = TopicSerializer(many=True, read_only=True)
 
