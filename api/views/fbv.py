@@ -8,7 +8,8 @@ from api.models import Category, Discussion, Topic, Comment
 from api.serializers import CategorySerializer, \
     DiscussionSerializer, TopicSerializer,\
     CommentSerializer, CategoryWithDiscussionsSerializer, \
-    DiscussionWithTopicsSerializer, TopicWithCommentsSerializer
+    DiscussionWithTopicsSerializer, TopicWithCommentsSerializer,\
+    CommentMSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -138,7 +139,7 @@ def topic_list(request):
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'POST'])
 # @permission_classes([IsAuthenticated])
 def topic_detail(request, topic_id):
     try:
@@ -160,6 +161,14 @@ def topic_detail(request, topic_id):
     elif request.method == 'DELETE':
         topic.delete()
         return Response({'deleted': True})
+
+    elif request.method == 'POST':
+        serializer = CommentMSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'error': serializer.errors},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
